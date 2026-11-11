@@ -33,7 +33,7 @@ Format: `type/area-short-description`
 
 | Area | Meaning |
 |---|---|
-| `app` | mobile client (`app/`, React Native + Expo) |
+| `app` | mobile client (`mobile/`, React Native + Expo) |
 | `api` | backend (`api/`, FastAPI) |
 | `db` | database models and migrations |
 
