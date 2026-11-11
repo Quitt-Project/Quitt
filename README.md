@@ -57,12 +57,6 @@ docker compose run --rm backend alembic upgrade head
 
 Check the new file in `backend/alembic/versions/` before you commit it.
 
-## Common problems
-
-- **password authentication failed**: you changed `.env` after the first start. Go back to the old values or reset the database with `docker compose down -v` (this deletes all local data).
-- **Adminer: Connection refused**: choose PostgreSQL instead of MySQL.
-- **VS Code can't find `fastapi`**: create a venv in `backend/` (`python3.12 -m venv .venv`, then `.venv/bin/pip install -r requirements.txt`) and select it as the Python interpreter.
-
 ## Working on the project
 
 Branches, commits and pull requests: see [docs/git-workflow.md](docs/git-workflow.md).
