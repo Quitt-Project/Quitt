@@ -1,0 +1,46 @@
+# Starts the database and the backend for development.
+#   Start:  docker compose up        (add -d to run in the background)
+#   Stop:   docker compose down
+#   Logs:   docker compose logs -f backend
+#
+# The Expo app does NOT run in Docker - start it with `npm start` in the mobile/ folder.
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-quitt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-quitt}
+      POSTGRES_DB: ${POSTGRES_DB:-quitt}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-quitt} -d ${POSTGRES_DB:-quitt}"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-quitt}:${POSTGRES_PASSWORD:-quitt}@db:5432/${POSTGRES_DB:-quitt}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app # code changes are picked up without rebuilding
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  adminer: # view the database in the browser: http://localhost:8080
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
