@@ -1,8 +1,7 @@
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from sqlmodel import SQLModel, Field
-
+from sqlmodel import Field, SQLModel
 
 
 class User(SQLModel, table=True):
@@ -12,4 +11,4 @@ class User(SQLModel, table=True):
     name: str = Field()
     email: str = Field(index=True, unique=True)
     password_hash: str
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

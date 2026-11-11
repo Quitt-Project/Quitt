@@ -1,8 +1,7 @@
 import os
-
 from typing import Annotated, TypeAlias
 
-from fastapi import Depends 
+from fastapi import Depends
 from sqlmodel import Session, create_engine
 
 database_url = os.environ.get("DATABASE_URL")
