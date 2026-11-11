@@ -1,0 +1,6 @@
+fastapi
+uvicorn 
+pytest 
+httpx2 
+"pwdlib[argon2]" 
+email-validator
