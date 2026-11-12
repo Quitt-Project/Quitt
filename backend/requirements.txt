@@ -1,6 +1,6 @@
 fastapi
 uvicorn 
 pytest 
-httpx2 
+httpx
 "pwdlib[argon2]" 
 email-validator
