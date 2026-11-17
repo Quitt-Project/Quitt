@@ -11,6 +11,8 @@ quitt is a mobile app for Azubis. It collects receipts, trips and deadlines over
 
 ## Setup
 
+Run all commands in the project folder (`Quitt`), unless a step says otherwise.
+
 ```bash
 git clone https://github.com/Quitt-Project/Quitt.git
 cd Quitt
