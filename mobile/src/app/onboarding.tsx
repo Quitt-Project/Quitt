@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Linking, View, Text, StyleSheet, Pressable } from 'react-native';
 import { useState } from 'react';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useOnboarding } from '@/context/onboarding';
 
 type Point = { title: string; description: string };
+
+const STEUERBERATER_URL = 'https://steuerberaterverzeichnis.berufs-org.de/';
 
 const onboardingPoints: Point[] = [
   {
@@ -55,8 +57,14 @@ export default function Onboarding() {
       </View>
 
       <Text style={styles.help}>
-        Fragen zur Steuer? <Text style={styles.helpLink}>Lohnsteuerhilfeverein</Text> oder{' '}
-        <Text style={styles.helpLink}>Steuerberatung</Text>
+        Fragen zur Steuer?{' '}
+        <Text
+          style={styles.helpLink}
+          accessibilityRole="link"
+          onPress={() => Linking.openURL(STEUERBERATER_URL)}
+        >
+          Steuerberatung
+        </Text>
       </Text>
 
       <View style={styles.spacer} />
