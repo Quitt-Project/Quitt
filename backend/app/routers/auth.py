@@ -1,18 +1,16 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import select
-
 from app.database import SessionDependency
 from app.dependencies import get_current_user
 from app.models import User
 from app.schemas.user import UserLogin, UserRegister
-from app.security import ( 
+from app.security import (
     create_access_token,
     hash_password,
     verify_password,
 )
-
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlmodel import select
 
 CurrentUserDependency = Annotated[
     User,

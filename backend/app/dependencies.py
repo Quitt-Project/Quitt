@@ -8,7 +8,6 @@ from app.database import SessionDependency
 from app.models import User
 from app.security import decode_access_token
 
-
 bearer_scheme = HTTPBearer()
 
 CredentialsDependency = Annotated[

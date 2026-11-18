@@ -4,13 +4,11 @@ os.environ["DATABASE_URL"] = "sqlite://"
 os.environ["JWT_SECRET"] = "test-secret-key-that-is-at-least-32-bytes-long"
 
 import pytest
+from app.database import get_session
+from app.main import app
 from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
-
-from app.database import get_session
-from app.main import app
-
 
 test_engine = create_engine(
     "sqlite://",
