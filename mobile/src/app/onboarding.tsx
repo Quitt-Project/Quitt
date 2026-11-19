@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { useOnboarding } from '@/context/onboarding';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Point = { title: string; description: string };
 
@@ -26,13 +27,16 @@ const onboardingPoints: Point[] = [
 export default function Onboarding() {
   const [accepted, setAccepted] = useState(false);
   const { accept } = useOnboarding();
+  const insets = useSafeAreaInsets();
 
   const handleStart = async () => {
     await accept();
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 16 }]}
+    >
       <View style={styles.header}>
         <Image
           source={require('@/assets/images/quitt-icon-vw.svg')}
@@ -96,9 +100,7 @@ export default function Onboarding() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 72,
     paddingHorizontal: 24,
-    paddingBottom: 32,
     backgroundColor: '#FFFFFF',
     gap: 28,
   },

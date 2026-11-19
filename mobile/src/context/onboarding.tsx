@@ -18,12 +18,21 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
       .then((value) => setAccepted(value === 'true'))
+      .catch((error) => {
+        console.warn('Failed to read onboarding flag', error);
+        setAccepted(false);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
   const accept = async () => {
-    await AsyncStorage.setItem(STORAGE_KEY, 'true');
-    setAccepted(true);
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, 'true');
+    } catch (error) {
+      console.warn('Failed to save onboarding flag', error);
+    } finally {
+      setAccepted(true);
+    }
   };
 
   return (
