@@ -8,6 +8,7 @@ from app.dependencies import get_current_user
 from app.models import User
 from app.schemas.user import UserLogin, UserRegister
 from app.security import (
+    DUMMY_PASSWORD_HASH,
     create_access_token,
     hash_password,
     verify_password,
@@ -55,13 +56,17 @@ def login(user: UserLogin, session: SessionDependency):
         select(User).where(User.email == user.email)
     ).first()
 
-    if not existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password",
-        )
+    if existing_user is not None:
+        password_hash_to_check = existing_user.password_hash
+    else:
+        password_hash_to_check = DUMMY_PASSWORD_HASH
 
-    if not verify_password(user.password, existing_user.password_hash):
+    password_is_valid = verify_password(
+        user.password,
+        password_hash_to_check,
+    )
+
+    if existing_user is None or not password_is_valid:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",

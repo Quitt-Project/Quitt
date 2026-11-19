@@ -7,6 +7,10 @@ from app.config import JWT_ALGORITHM, JWT_EXPIRE_MINUTES, JWT_SECRET
 
 password_hash = PasswordHash.recommended()
 
+DUMMY_PASSWORD_HASH = password_hash.hash(
+    "dummy-password-used-only-for-timing-protection"
+)
+
 
 def hash_password(password: str) -> str:
     return password_hash.hash(password)

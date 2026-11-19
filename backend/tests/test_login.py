@@ -72,3 +72,25 @@ def test_login_unknown_email(client):
     assert response.json() == {
         "detail": "Invalid email or password"
     }
+
+def test_login_email_is_case_insensitive(client):
+    register_response = client.post(
+        "/register",
+        json={
+            "name": "Illia",
+            "email": "illia@example.com",
+            "password": "sicheresPasswort123",
+        },
+    )
+
+    assert register_response.status_code == 201
+
+    login_response = client.post(
+        "/login",
+        json={
+            "email": "ILLIA@EXAMPLE.COM",
+            "password": "sicheresPasswort123",
+        },
+    )
+
+    assert login_response.status_code == 200
