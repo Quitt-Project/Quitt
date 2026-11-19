@@ -1,8 +1,8 @@
 """create entries table
 
-Revision ID: b9872c095ff6
+Revision ID: 4444e762e7e3
 Revises: e48cdf9dee35
-Create Date: 2026-11-17 12:02:05.863004
+Create Date: 2026-11-19 08:38:22.349963
 
 """
 from collections.abc import Sequence
@@ -13,7 +13,7 @@ import sqlmodel
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = 'b9872c095ff6'
+revision: str = '4444e762e7e3'
 down_revision: str | Sequence[str] | None = 'e48cdf9dee35'
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -34,6 +34,8 @@ def upgrade() -> None:
     sa.Column('distance_km', sa.Integer(), nullable=True),
     sa.Column('days', sa.Integer(), nullable=True),
     sa.Column('created_at', sqlmodel.sql.sqltypes.UTCDateTime(), nullable=False),
+    sa.CheckConstraint("category IN ('uncategorized', 'work_equipment', 'literature', 'training', 'trips', 'other')", name='ck_entries_category'),
+    sa.CheckConstraint("kind IN ('receipt', 'trip')", name='ck_entries_kind'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
