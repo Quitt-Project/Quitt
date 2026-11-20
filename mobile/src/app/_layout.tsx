@@ -10,11 +10,9 @@ function RootNavigator() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="scan" options={{ presentation: 'fullScreenModal' }} />
       <Stack.Protected guard={accepted}>
         <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="scan" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="scan" options={{ presentation: 'fullScreenModal' }} />
       </Stack.Protected>
       <Stack.Protected guard={!accepted}>
         <Stack.Screen name="onboarding" />
