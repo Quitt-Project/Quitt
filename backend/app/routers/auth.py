@@ -1,10 +1,8 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from sqlmodel import select
 
 from app.database import SessionDependency
-from app.dependencies import get_current_user
+from app.dependencies import CurrentUserDependency
 from app.models import User
 from app.schemas.user import UserLogin, UserRegister
 from app.security import (
@@ -13,11 +11,6 @@ from app.security import (
     hash_password,
     verify_password,
 )
-
-CurrentUserDependency = Annotated[
-    User,
-    Depends(get_current_user),
-]
 
 router = APIRouter()
 
