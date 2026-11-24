@@ -19,7 +19,8 @@ function RootNavigator() {
       </Stack.Protected>
 
       <Stack.Protected guard={accepted && !isLoggedIn}>
-        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="login" />
+        <Stack.Screen name="register" />
       </Stack.Protected>
 
       <Stack.Protected guard={accepted && isLoggedIn}>
