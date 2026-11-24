@@ -38,6 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (error instanceof ApiError && error.status === 401) {
           await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {});
         } else {
+          // Server not reachable: keep the token so the next app start can log in again.
+          // The user sees the login screen for now (intended for the MVP).
           console.warn('Failed to restore session', error);
         }
       } finally {

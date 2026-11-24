@@ -63,7 +63,7 @@ export default function RegisterScreen() {
       return;
     }
     if (password.length < PASSWORD_MIN || password.length > PASSWORD_MAX) {
-      setError(`Das Passwort muss mindestens ${PASSWORD_MIN} Zeichen lang sein.`);
+      setError(`Das Passwort muss ${PASSWORD_MIN} bis ${PASSWORD_MAX} Zeichen lang sein.`);
       return;
     }
 
