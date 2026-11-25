@@ -1,15 +1,36 @@
 from fastapi import APIRouter, HTTPException, status
-from sqlmodel import select
+from sqlmodel import Session, select
 
 from app.database import SessionDependency
 from app.dependencies import CurrentUserDependency
-from app.models import Entry
+from app.models import Entry, User
 from app.schemas.entry import EntryCreate, EntryResponse, EntryUpdate
 
 router = APIRouter(
     prefix="/entries",
     tags=["entries"],
 )
+
+
+def get_own_entry_or_404(
+    session: Session,
+    entry_id: int,
+    current_user: User,
+) -> Entry:
+    entry = session.exec(
+        select(Entry).where(
+            Entry.id == entry_id,
+            Entry.user_id == current_user.id,
+        )
+    ).first()
+
+    if entry is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Entry not found",
+        )
+
+    return entry
 
 @router.post(
     "",
@@ -55,20 +76,11 @@ def get_entry(
     session: SessionDependency,
     current_user: CurrentUserDependency,
 ):
-    entry = session.exec(
-        select(Entry).where(
-            Entry.id == entry_id,
-            Entry.user_id == current_user.id,
-        )
-    ).first()
-
-    if entry is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Entry not found",
-        )
-
-    return entry
+    return get_own_entry_or_404(
+        session,
+        entry_id,
+        current_user,
+    )
 
 @router.patch(
     "/{entry_id}",
@@ -80,18 +92,11 @@ def update_entry(
     session: SessionDependency,
     current_user: CurrentUserDependency,
 ):
-    entry = session.exec(
-        select(Entry).where(
-            Entry.id == entry_id,
-            Entry.user_id == current_user.id,
-        )
-    ).first()
-
-    if entry is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Entry not found",
-        )
+    entry = get_own_entry_or_404(
+        session,
+        entry_id,
+        current_user,
+    )
 
     update_data = entry_data.model_dump(exclude_unset=True)         #exclude_unset=True gibt nur die vom Client tatsächlich mitgeschickten Felder aus
 
@@ -113,18 +118,11 @@ def delete_entry(
     session: SessionDependency,
     current_user: CurrentUserDependency,
 ):
-    entry = session.exec(
-        select(Entry).where(
-            Entry.id == entry_id,
-            Entry.user_id == current_user.id,
-        )
-    ).first()
-
-    if entry is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Entry not found",
-        )
+    entry = get_own_entry_or_404(
+        session,
+        entry_id,
+        current_user,
+    )
 
     session.delete(entry)
     session.commit()

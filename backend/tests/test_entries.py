@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 
 
@@ -375,3 +376,91 @@ def test_delete_other_users_entry_returns_404(client: TestClient):
     )
 
     assert get_response.status_code == 200
+
+@pytest.mark.parametrize(
+    "field",
+    ["kind", "category", "entry_date"],
+)
+def test_update_entry_rejects_null_required_fields(
+    client: TestClient,
+    field: str,
+):
+    access_token = create_user_and_login(
+        client,
+        "Illia",
+        "illia@example.com",
+    )
+
+    create_response = client.post(
+        "/entries",
+        json={
+            "kind": "receipt",
+            "amount": 1999,
+            "category": "work_equipment",
+        },
+        headers={
+            "Authorization": f"Bearer {access_token}"
+        },
+    )
+
+    assert create_response.status_code == 201
+
+    entry_id = create_response.json()["id"]
+
+    response = client.patch(
+        f"/entries/{entry_id}",
+        json={
+            field: None,
+        },
+        headers={
+            "Authorization": f"Bearer {access_token}"
+        },
+    )
+
+    assert response.status_code == 422
+
+@pytest.mark.parametrize(
+    "field",
+    ["amount", "note", "distance_km", "days"],
+)
+def test_update_entry_allows_null_optional_fields(
+    client: TestClient,
+    field: str,
+):
+    access_token = create_user_and_login(
+        client,
+        "Illia",
+        "illia@example.com",
+    )
+
+    create_response = client.post(
+        "/entries",
+        json={
+            "kind": "receipt",
+            "amount": 1999,
+            "category": "work_equipment",
+            "note": "Test",
+            "distance_km": 20,
+            "days": 2,
+        },
+        headers={
+            "Authorization": f"Bearer {access_token}"
+        },
+    )
+
+    assert create_response.status_code == 201
+
+    entry_id = create_response.json()["id"]
+
+    response = client.patch(
+        f"/entries/{entry_id}",
+        json={
+            field: None,
+        },
+        headers={
+            "Authorization": f"Bearer {access_token}"
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.json()[field] is None
