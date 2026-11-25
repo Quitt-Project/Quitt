@@ -4,7 +4,16 @@ import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
-import { ActivityIndicator, Alert, Button, Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const FLASH_ICON = { off: 'flash-off', auto: 'flash-outline', on: 'flash' } as const;
@@ -77,17 +86,16 @@ export default function ScanScreen() {
     setCameraReady(false);
   };
 
+  const handlePermission = () => {
+    if (permission?.canAskAgain) {
+      requestPermission();
+    } else {
+      Linking.openSettings();
+    }
+  };
+
   if (!permission) {
     return <View style={styles.container} />;
-  }
-
-  if (!permission.granted) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.closeText}>Quitt braucht Zugriff auf die Kamera.</Text>
-        <Button title="Zugriff erlauben" onPress={requestPermission} />
-      </View>
-    );
   }
 
   if (image) {
@@ -106,7 +114,10 @@ export default function ScanScreen() {
           <Pressable style={styles.actionButton} onPress={retake}>
             <Text style={styles.actionText}>Nochmal</Text>
           </Pressable>
-          <Pressable style={[styles.actionButton, styles.primaryButton]} onPress={() => router.back()}>
+          <Pressable
+            style={[styles.actionButton, styles.primaryButton]}
+            onPress={() => router.back()}
+          >
             <Text style={[styles.actionText, styles.primaryText]}>Verwenden</Text>
           </Pressable>
         </View>
@@ -116,16 +127,34 @@ export default function ScanScreen() {
 
   return (
     <View style={styles.container}>
-      <CameraView
-        ref={cameraRef}
-        style={StyleSheet.absoluteFill}
-        facing="back"
-        flash={flash}
-        onCameraReady={() => setCameraReady(true)}
-      />
+      {permission.granted ? (
+        <CameraView
+          ref={cameraRef}
+          style={StyleSheet.absoluteFill}
+          facing="back"
+          flash={flash}
+          onCameraReady={() => setCameraReady(true)}
+        />
+      ) : (
+        <View style={styles.permissionBox}>
+          <Ionicons name="camera-outline" size={48} color="#FFFFFF" />
+          <Text style={styles.permissionText}>
+            Quitt braucht Zugriff auf die Kamera, um Belege zu fotografieren.
+          </Text>
+          <Pressable style={styles.actionButton} onPress={handlePermission}>
+            <Text style={styles.actionText}>
+              {permission.canAskAgain ? 'Zugriff erlauben' : 'Einstellungen öffnen'}
+            </Text>
+          </Pressable>
+        </View>
+      )}
 
       <View style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}>
-        <Pressable style={styles.sideButton} onPress={pickImage} accessibilityLabel="Foto aus Galerie">
+        <Pressable
+          style={styles.sideButton}
+          onPress={pickImage}
+          accessibilityLabel="Foto aus Galerie"
+        >
           <Ionicons name="images-outline" size={28} color="#FFFFFF" />
         </Pressable>
 
@@ -138,19 +167,28 @@ export default function ScanScreen() {
           {isTaking && <ActivityIndicator color="#FFFFFF" />}
         </Pressable>
 
-        <Pressable style={styles.sideButton} onPress={pickDocument} accessibilityLabel="Dateien auswählen">
+        <Pressable
+          style={styles.sideButton}
+          onPress={pickDocument}
+          accessibilityLabel="Dateien auswählen"
+        >
           <Ionicons name="document-outline" size={28} color="#FFFFFF" />
         </Pressable>
       </View>
 
       <View style={[styles.topBar, { paddingTop: insets.top + 8 }]}>
-        <Pressable style={styles.sideButton} onPress={() => router.back()} accessibilityLabel="Schließen">
+        <Pressable
+          style={styles.sideButton}
+          onPress={() => router.back()}
+          accessibilityLabel="Schließen"
+        >
           <Ionicons name="close" size={30} color="#FFFFFF" />
         </Pressable>
 
         <Pressable
           style={styles.sideButton}
           onPress={() => setFlash(NEXT_FLASH[flash])}
+          disabled={!permission.granted}
           accessibilityLabel="Blitz umschalten"
         >
           <Ionicons name={FLASH_ICON[flash]} size={26} color="#FFFFFF" />
@@ -167,6 +205,18 @@ const styles = StyleSheet.create({
   },
   closeText: {
     color: '#FFFFFF',
+  },
+  permissionBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
+    padding: 32,
+  },
+  permissionText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
   },
   bottomBar: {
     position: 'absolute',

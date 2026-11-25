@@ -33,6 +33,18 @@
           "imageWidth": 76
         }
       ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Quitt braucht Zugriff auf die Kamera, um Belege zu fotografieren."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Quitt braucht Zugriff auf deine Fotos, um Belege auszuwählen."
+        }
+      ],
       "expo-secure-store",
       "expo-status-bar",
       "expo-web-browser"
