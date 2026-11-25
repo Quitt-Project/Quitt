@@ -1,10 +1,8 @@
-import * as SecureStore from 'expo-secure-store';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
 import { getMe, login, register, type User } from '@/api/auth';
 import { ApiError } from '@/api/client';
-
-const TOKEN_KEY = 'authToken';
+import * as tokenStorage from '@/storage/token';
 
 type AuthContextValue = {
   user: User | null;
@@ -25,7 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function restoreSession() {
       try {
-        const savedToken = await SecureStore.getItemAsync(TOKEN_KEY);
+        const savedToken = await tokenStorage.getToken();
 
         if (!savedToken) {
           return;
@@ -36,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(currentUser);
       } catch (error) {
         if (error instanceof ApiError && error.status === 401) {
-          await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {});
+          await tokenStorage.deleteToken().catch(() => {});
         } else {
           // Server not reachable: keep the token so the next app start can log in again.
           // The user sees the login screen for now (intended for the MVP).
@@ -53,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const newToken = await login(email, password);
     const currentUser = await getMe(newToken);
 
-    await SecureStore.setItemAsync(TOKEN_KEY, newToken);
+    await tokenStorage.setToken(newToken);
     setToken(newToken);
     setUser(currentUser);
   };
@@ -65,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     try {
-      await SecureStore.deleteItemAsync(TOKEN_KEY);
+      await tokenStorage.deleteToken();
     } catch (error) {
       console.warn('Failed to delete token', error);
     } finally {
