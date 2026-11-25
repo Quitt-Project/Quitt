@@ -28,6 +28,7 @@ services:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-quitt}:${POSTGRES_PASSWORD:-quitt}@db:5432/${POSTGRES_DB:-quitt}
       APP_NAME: ${APP_NAME:-quitt API}
       APP_ENV: ${APP_ENV:-development}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8081}
       JWT_SECRET: ${JWT_SECRET}
       JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
       JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-30}
