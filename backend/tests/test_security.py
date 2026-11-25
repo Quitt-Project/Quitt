@@ -16,12 +16,14 @@ def test_hash_password():
 
     assert hashed_password != password
 
+
 def test_verify_password():
     password = "meinSicheresPasswort123"
     hashed_password = hash_password(password)
 
     assert verify_password(password, hashed_password) is True
     assert verify_password("falschesPasswort", hashed_password) is False
+
 
 def test_access_token():
     user_id = 42
@@ -30,6 +32,7 @@ def test_access_token():
     decoded_user_id = decode_access_token(token)
 
     assert decoded_user_id == user_id
+
 
 def test_invalid_access_token():
     token = create_access_token(42)

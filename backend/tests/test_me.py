@@ -26,9 +26,7 @@ def test_me_success(client):
 
     response = client.get(
         "/me",
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 200
@@ -39,15 +37,12 @@ def test_me_success(client):
     assert data["name"] == "Illia"
     assert data["email"] == "illia@example.com"
 
+
 def test_me_invalid_token(client):
     response = client.get(
         "/me",
-        headers={
-            "Authorization": "Bearer das-ist-kein-gueltiger-token"
-        },
+        headers={"Authorization": "Bearer das-ist-kein-gueltiger-token"},
     )
 
     assert response.status_code == 401
-    assert response.json() == {
-        "detail": "Invalid or expired token"
-    }
+    assert response.json() == {"detail": "Invalid or expired token"}

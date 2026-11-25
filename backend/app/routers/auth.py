@@ -17,9 +17,7 @@ router = APIRouter()
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(user: UserRegister, session: SessionDependency):
-    existing_user = session.exec(
-        select(User).where(User.email == user.email)
-    ).first()
+    existing_user = session.exec(select(User).where(User.email == user.email)).first()
 
     if existing_user:
         raise HTTPException(
@@ -43,11 +41,10 @@ def register(user: UserRegister, session: SessionDependency):
         "email": new_user.email,
     }
 
+
 @router.post("/login")
 def login(user: UserLogin, session: SessionDependency):
-    existing_user = session.exec(
-        select(User).where(User.email == user.email)
-    ).first()
+    existing_user = session.exec(select(User).where(User.email == user.email)).first()
 
     if existing_user is not None:
         password_hash_to_check = existing_user.password_hash
@@ -71,6 +68,7 @@ def login(user: UserLogin, session: SessionDependency):
         "access_token": access_token,
         "token_type": "bearer",
     }
+
 
 @router.get("/me")
 def get_me(current_user: CurrentUserDependency):

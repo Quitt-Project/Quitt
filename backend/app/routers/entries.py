@@ -32,6 +32,7 @@ def get_own_entry_or_404(
 
     return entry
 
+
 @router.post(
     "",
     response_model=EntryResponse,
@@ -43,15 +44,16 @@ def create_entry(
     current_user: CurrentUserDependency,
 ):
     entry = Entry(
-        user_id=current_user.id,            # ** entpackt Schlüssel und Werte zu benannten Argumenten
-        **entry_data.model_dump(),          # (macht quasi kind = entry_data.kind, amount = entry_data.amount usw.)
-    )                                       # z.B.  daten ={"kind"= receipt,} entry(**daten) -> entry (kind = receipt)
-    
+        user_id=current_user.id,  # ** entpackt Schlüssel und Werte zu benannten Argumenten
+        **entry_data.model_dump(),  # (macht quasi kind = entry_data.kind, amount = entry_data.amount usw.)
+    )  # z.B.  daten ={"kind"= receipt,} entry(**daten) -> entry (kind = receipt)
+
     session.add(entry)
     session.commit()
     session.refresh(entry)
 
     return entry
+
 
 @router.get(
     "",
@@ -61,11 +63,10 @@ def list_entries(
     session: SessionDependency,
     current_user: CurrentUserDependency,
 ):
-    entries = session.exec(
-        select(Entry).where(Entry.user_id == current_user.id)
-    ).all()
+    entries = session.exec(select(Entry).where(Entry.user_id == current_user.id)).all()
 
     return entries
+
 
 @router.get(
     "/{entry_id}",
@@ -81,6 +82,7 @@ def get_entry(
         entry_id,
         current_user,
     )
+
 
 @router.patch(
     "/{entry_id}",
@@ -98,7 +100,9 @@ def update_entry(
         current_user,
     )
 
-    update_data = entry_data.model_dump(exclude_unset=True)         #exclude_unset=True gibt nur die vom Client tatsächlich mitgeschickten Felder aus
+    update_data = entry_data.model_dump(
+        exclude_unset=True
+    )  # exclude_unset=True gibt nur die vom Client tatsächlich mitgeschickten Felder aus
 
     for field, value in update_data.items():
         setattr(entry, field, value)
@@ -108,6 +112,7 @@ def update_entry(
     session.refresh(entry)
 
     return entry
+
 
 @router.delete(
     "/{entry_id}",
@@ -126,4 +131,3 @@ def delete_entry(
 
     session.delete(entry)
     session.commit()
-    

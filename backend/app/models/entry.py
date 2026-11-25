@@ -8,7 +8,10 @@ class Entry(SQLModel, table=True):
     __tablename__ = "entries"
     __table_args__ = (
         CheckConstraint("kind IN ('receipt', 'trip')", name="ck_entries_kind"),
-        CheckConstraint("category IN ('uncategorized', 'work_equipment', 'literature', 'training', 'trips', 'other')", name="ck_entries_category")
+        CheckConstraint(
+            "category IN ('uncategorized', 'work_equipment', 'literature', 'training', 'trips', 'other')",
+            name="ck_entries_category",
+        ),
     )
 
     id: int | None = Field(default=None, primary_key=True)
