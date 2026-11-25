@@ -3,10 +3,11 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   Image,
   Linking,
   Pressable,
@@ -22,13 +23,23 @@ const NEXT_FLASH = { off: 'auto', auto: 'on', on: 'off' } as const;
 export default function ScanScreen() {
   const router = useRouter();
   const [image, setImage] = useState<string | null>(null);
-  const [permission, requestPermission] = useCameraPermissions();
+  const [permission, requestPermission, getPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
   const insets = useSafeAreaInsets();
   const [flash, setFlash] = useState<'off' | 'auto' | 'on'>('off');
   const [pdfName, setPdfName] = useState<string | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
   const [isTaking, setIsTaking] = useState(false);
+
+  // Re-check the camera permission when the user comes back from the settings.
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        getPermission();
+      }
+    });
+    return () => subscription.remove();
+  }, [getPermission]);
 
   const pickImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
