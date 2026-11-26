@@ -41,3 +41,4 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run format:check
+      - run: npx expo config --type prebuild > /dev/null
