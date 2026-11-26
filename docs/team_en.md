@@ -10,7 +10,7 @@ Areas to assign:
 - Backend and API (FastAPI)
 - Database and models (SQLAlchemy)
 - Docker Compose, project setup
-- Design and mockups
+- Design and mockups (including the contrast check, see `overview_en.md`, section Accessibility)
 - Documentation and presentation
 
 ## Timeline
@@ -24,7 +24,7 @@ Areas to assign:
 | 1 | [DATE] | [TO FILL IN] |
 | 2 | [DATE] | MUSS ready: receipt photo, manual entry, list |
 | 3 | [DATE] | SOLL (OCR, trips), as far as time allows |
-| 4 | [DATE] | Testing, fixes, presentation |
+| 4 | [DATE] | Testing (including the screen reader test), fixes, presentation |
 
 ## How we work
 
@@ -33,5 +33,6 @@ Areas to assign:
 - Where we communicate: [TO FILL IN]
 - Meetings: [DAY, TIME]
 - Branches and reviews: see `git-workflow.md`
+- Accessibility (decision no. 25): requirements in `overview_en.md`, section Accessibility. Everyone who changes the UI ticks the accessibility checklist in their pull request. The contrast check of the design (Sprint 5) is done by the team together before the design is applied; the screen reader test (Sprint 6) on real devices.
 - Language of code and comments: English
 - Language of documentation and presentation: English / German

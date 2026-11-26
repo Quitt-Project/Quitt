@@ -76,7 +76,7 @@ Login in MUSS: email + password (JWT).
 
 - OCR: recognise Betrag and Datum (the user checks and corrects)
 - Fahrten-Schnellerfassung: quick logging of a Strecke (trip without a receipt, in km)
-- Dark Mode
+- Dark Mode (must meet the same contrast requirements, see Accessibility)
 - Google login (added after email + password login works; not in the pitch)
 - Possibly: export of all Belege as ZIP (shown in the Jahresübersicht mockup; not implemented for now)
 
@@ -151,11 +151,45 @@ Bottom navigation: Start/Übersicht, Belege, camera button in the centre, Friste
 
 The app does not calculate tax amounts: tickets are shown in euros as paid, Strecken in kilometres.
 
+## Accessibility
+
+Decision no. 25 (issue #42). quitt is built to be accessible (barrierefrei) as far as a team of three beginners can manage. Accessibility is not a separate feature: the requirements below apply to every screen in MUSS and SOLL, starting with Sprint 2. They are a baseline, not a certification. The numbers follow WCAG 2.1, level AA.
+
+### Requirements
+
+| Area | Requirement |
+|---|---|
+| Contrast of text | At least 4.5 : 1 against the background. Large text (from 18 pt, or 14 pt bold) at least 3 : 1 |
+| Contrast of UI elements | Icons, input borders, checkboxes, switches and the focus mark at least 3 : 1 against the background |
+| Light and dark | Once Dark Mode (SOLL) exists, both themes meet the numbers above |
+| Colour is not the only signal | Status and errors also use text or an icon. Example: the "Foto fehlt" badge has text; an error message says what is wrong |
+| Screen reader | Every button, icon button and input has a label (e.g. the camera button: "Beleg scannen"); roles and states are set (button, checkbox, switch, selected); the reading order follows the visual order |
+| Text size | Text follows the system font size; no fixed heights that cut text off; the app still works with the largest setting |
+| Tap targets | At least 44 × 44 pt, including the bottom navigation, toggles and list rows |
+| Forms | Every field has a visible label (not only a placeholder); errors appear next to the field as text |
+
+### How we check it
+
+| When | What |
+|---|---|
+| Every pull request with UI changes | Accessibility checklist from `git-workflow.md` |
+| Sprint 5 | Contrast check of the chosen design (every text and background colour pair, light and dark) before the design is applied |
+| Sprint 6 | Manual test on real devices with VoiceOver (iPhone) or TalkBack (Android) and with the largest font size: Onboarding, scanning a Beleg, Belegliste, Fristen, PDF export |
+
+Any contrast checker works for the colour pairs (for example the WebAIM Contrast Checker).
+
+### Not in scope
+
+- no formal WCAG audit or certification
+- no extra accessibility libraries and no separate high-contrast theme
+- no accessibility testing of the exported PDF beyond readable text and a sensible title
+
 ## Design
 
 Not decided yet. The team builds the functional part first and decides on the visual design afterwards.
 
 - For now, mockups are informational wireframes: they show screens, fields and flows, without visual design.
+- The chosen design must meet the contrast requirements from the section Accessibility. Both candidates are checked before the decision (Sprint 5); if a candidate fails, its colours are adjusted, the structure of the screens stays.
 - Two visual directions exist as candidates for later: "Funky Mockups" (neo-brutal: lilac background, lime green and pink accents, thick black outlines) and the green variant from the pitch.
 
 ## Tech stack
@@ -189,4 +223,4 @@ None at the moment.
 
 - OCR: where recognition runs (decide when starting SOLL)
 - ZIP export: whether it becomes SOLL
-- Visual design: after the functional part is done
+- Visual design: after the functional part is done; it must meet the contrast requirements (no. 25)
