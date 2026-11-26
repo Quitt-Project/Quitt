@@ -21,7 +21,6 @@ class Entry(SQLModel, table=True):
     entry_date: date = Field(default_factory=lambda: date.today())
     category: str = Field(default="uncategorized", index=True)
     note: str | None = Field(default=None)
-    photo_path: str | None = Field(default=None)
     distance_km: int | None = Field(default=None)
     days: int | None = Field(default=None)
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
