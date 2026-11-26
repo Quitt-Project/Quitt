@@ -1,10 +1,8 @@
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from sqlmodel import select
 
 from app.database import SessionDependency
-from app.dependencies import get_current_user
+from app.dependencies import CurrentUserDependency
 from app.models import User
 from app.schemas.user import UserLogin, UserRegister
 from app.security import (
@@ -14,19 +12,12 @@ from app.security import (
     verify_password,
 )
 
-CurrentUserDependency = Annotated[
-    User,
-    Depends(get_current_user),
-]
-
 router = APIRouter()
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(user: UserRegister, session: SessionDependency):
-    existing_user = session.exec(
-        select(User).where(User.email == user.email)
-    ).first()
+    existing_user = session.exec(select(User).where(User.email == user.email)).first()
 
     if existing_user:
         raise HTTPException(
@@ -50,11 +41,10 @@ def register(user: UserRegister, session: SessionDependency):
         "email": new_user.email,
     }
 
+
 @router.post("/login")
 def login(user: UserLogin, session: SessionDependency):
-    existing_user = session.exec(
-        select(User).where(User.email == user.email)
-    ).first()
+    existing_user = session.exec(select(User).where(User.email == user.email)).first()
 
     if existing_user is not None:
         password_hash_to_check = existing_user.password_hash
@@ -78,6 +68,7 @@ def login(user: UserLogin, session: SessionDependency):
         "access_token": access_token,
         "token_type": "bearer",
     }
+
 
 @router.get("/me")
 def get_me(current_user: CurrentUserDependency):
