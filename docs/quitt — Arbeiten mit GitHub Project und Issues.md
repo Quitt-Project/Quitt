@@ -77,7 +77,7 @@ Beispiel: Issue #12 „Add login endpoint“.
    git checkout -b feat/12-api-login
    ```
 3. **Arbeiten.** In kleinen Schritten committen und mindestens einmal am Tag pushen.
-4. **PR öffnen.** Titel wie eine Commit-Nachricht: `feat(api): add login endpoint`. In die Beschreibung gehört die Zeile `Closes #12`, damit PR und Issue verknüpft sind.
+4. **PR öffnen.** Titel wie eine Commit-Nachricht: `feat(api): add login endpoint`. In die Beschreibung gehört die Zeile `Closes #12`, damit PR und Issue verknüpft sind. Bei Änderungen an der Oberfläche kommt die Accessibility-Checkliste aus `git-workflow.md` in die PR-Beschreibung und wird abgehakt.
 5. **Review anfragen.** Rechts unter **Reviewers** eine Person auswählen und die Karte nach **In review** ziehen.
 6. **Mergen.** Nach der Freigabe **Squash and merge** klicken. Das Issue schließt sich von selbst und die Karte wandert nach **Done**.
 
@@ -104,4 +104,5 @@ Diese Regeln stehen im Board unter **Workflows** (oben rechts).
 - Höchstens ein bis zwei eigene Karten gleichzeitig in **In progress**.
 - Erst `muss`, dann `soll`, dann `kann`.
 - Karten in **In review** haben Vorrang: Review innerhalb eines Arbeitstags.
+- UI-Änderungen: Accessibility-Checkliste (siehe `git-workflow.md`) im PR abhaken; wer reviewt, prüft sie mit.
 - Wer nicht weiterkommt, schreibt einen Kommentar ins Issue und sagt im Team Bescheid.

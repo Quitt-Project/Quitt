@@ -86,7 +86,7 @@ Resolve conflicts on your branch, test, then push. Ask a teammate if a conflict 
 
 1. Push the branch and open a PR to `main` on GitHub.
 2. Title in the same format as a commit message: `feat(app): add receipt form`.
-3. Describe in 2 to 3 sentences what changed and how to test it. Add a screenshot for UI changes.
+3. Describe in 2 to 3 sentences what changed and how to test it. Add a screenshot for UI changes. For UI changes, also copy the accessibility checklist (below) into the description and tick it.
 4. Ask one teammate for a review.
 5. After approval, merge with "Squash and merge".
 6. Delete the branch after the merge.
@@ -98,6 +98,21 @@ Not ready yet but want feedback? Open the PR as a draft.
 - The reviewer runs the code or at least reads every changed file.
 - Comments are about the code, not the person. Questions are welcome.
 - Aim to review within one working day, so nobody is blocked.
+- For UI changes, the reviewer also goes through the accessibility checklist.
+
+### Accessibility checklist
+
+Decision no. 25. Use it for every pull request that changes the UI (area `app`). Details and numbers: `overview_en.md`, section Accessibility. No UI change? Write "n/a".
+
+```markdown
+## Accessibility
+- [ ] Every button, icon and input has a label (`accessibilityLabel`) and a role (`accessibilityRole`)
+- [ ] Text contrast is at least 4.5 : 1 (large text, icons and borders at least 3 : 1)
+- [ ] Tap targets are at least 44 × 44 pt
+- [ ] Nothing is shown by colour alone (errors and status also have text)
+- [ ] Text still fits with the largest system font size
+- [ ] New screens were read once with VoiceOver or TalkBack, in a sensible order
+```
 
 ## Do not
 
