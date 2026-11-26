@@ -5,6 +5,7 @@ os.environ["JWT_SECRET"] = "test-secret-key-that-is-at-least-32-bytes-long"
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import event
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
@@ -16,6 +17,13 @@ test_engine = create_engine(
     connect_args={"check_same_thread": False},
     poolclass=StaticPool,
 )
+
+
+@event.listens_for(test_engine, "connect")
+def enable_sqlite_foreign_keys(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 
 @pytest.fixture
@@ -32,4 +40,12 @@ def client():
         yield test_client
 
     app.dependency_overrides.clear()
+    SQLModel.metadata.drop_all(test_engine)
+
+
+@pytest.fixture
+def session():
+    SQLModel.metadata.create_all(test_engine)
+    with Session(test_engine) as session:
+        yield session
     SQLModel.metadata.drop_all(test_engine)
