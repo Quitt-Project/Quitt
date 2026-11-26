@@ -28,7 +28,7 @@ test('is not accepted when storage is empty', async () => {
 });
 
 test('is accepted when storage already has "true"', async () => {
-  await AsyncStorage.setItem(KEY, 'true'); // підготувати: що покласти в сховище?
+  await AsyncStorage.setItem(KEY, 'true');
 
   const { result } = await renderHook(() => useOnboarding(), {
     wrapper: OnboardingProvider,
@@ -36,7 +36,7 @@ test('is accepted when storage already has "true"', async () => {
 
   await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-  expect(result.current.accepted).toBe(true); // що очікуємо?
+  expect(result.current.accepted).toBe(true);
 });
 
 test('accept() sets accepted and saves "true" to storage', async () => {
