@@ -6,13 +6,14 @@ from pydantic import BaseModel, Field, field_validator
 EntryKind = Literal["receipt", "trip"]
 
 EntryCategory = Literal[
-        "uncategorized",
-        "work_equipment",
-        "literature",
-        "training",
-        "trips",
-        "other",
+    "uncategorized",
+    "work_equipment",
+    "literature",
+    "training",
+    "trips",
+    "other",
 ]
+
 
 class EntryCreate(BaseModel):
     kind: EntryKind = "receipt"
@@ -22,6 +23,7 @@ class EntryCreate(BaseModel):
     note: str | None = None
     distance_km: int | None = Field(default=None, ge=0)
     days: int | None = Field(default=None, ge=0)
+
 
 class EntryUpdate(BaseModel):
     kind: EntryKind | None = None
@@ -38,6 +40,7 @@ class EntryUpdate(BaseModel):
         if value is None:
             raise ValueError("must not be null")
         return value
+
 
 class EntryResponse(BaseModel):
     id: int

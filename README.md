@@ -59,6 +59,15 @@ docker compose run --rm backend alembic upgrade head
 
 Check the new file in `backend/alembic/versions/` before you commit it.
 
+## Formatting the backend
+
+Format the backend code before you commit. CI fails if it is unformatted:
+
+```bash
+cd backend
+python -m ruff format .
+```
+
 ## Working on the project
 
 Branches, commits and pull requests: see [docs/git-workflow.md](docs/git-workflow.md).

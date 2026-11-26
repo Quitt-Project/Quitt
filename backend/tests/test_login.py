@@ -34,6 +34,7 @@ def test_login_success(client):
 
     assert token_user_id == user_id
 
+
 def test_login_wrong_password(client):
     register_response = client.post(
         "/register",
@@ -55,9 +56,8 @@ def test_login_wrong_password(client):
     )
 
     assert response.status_code == 401
-    assert response.json() == {
-        "detail": "Invalid email or password"
-    }
+    assert response.json() == {"detail": "Invalid email or password"}
+
 
 def test_login_unknown_email(client):
     response = client.post(
@@ -69,9 +69,8 @@ def test_login_unknown_email(client):
     )
 
     assert response.status_code == 401
-    assert response.json() == {
-        "detail": "Invalid email or password"
-    }
+    assert response.json() == {"detail": "Invalid email or password"}
+
 
 def test_login_email_is_case_insensitive(client):
     register_response = client.post(
