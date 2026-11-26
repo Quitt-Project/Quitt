@@ -18,6 +18,10 @@ describe('<Onboarding />', () => {
     jest.clearAllMocks();
   });
 
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   test('shows the title and the three points', async () => {
     await render(<Onboarding />);
 
