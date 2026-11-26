@@ -28,6 +28,7 @@ def create_user_and_login(client: TestClient, name: str, email: str) -> str:
 
     return login_response.json()["access_token"]
 
+
 def test_create_entry(client):
     access_token = create_user_and_login(client, "Illia", "illia@example.com")
 
@@ -39,9 +40,7 @@ def test_create_entry(client):
             "category": "work_equipment",
             "note": "USB-C Adapter",
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 201
@@ -57,6 +56,7 @@ def test_create_entry(client):
     assert "user_id" not in data
     assert "photo_path" not in data
 
+
 def test_create_entry_without_token(client):
     response = client.post(
         "/entries",
@@ -68,6 +68,7 @@ def test_create_entry_without_token(client):
     )
 
     assert response.status_code == 401
+
 
 def test_list_entries_only_returns_own_entries(client):
     illia_token = create_user_and_login(
@@ -90,9 +91,7 @@ def test_list_entries_only_returns_own_entries(client):
             "category": "work_equipment",
             "note": "Illias Entry",
         },
-        headers={
-            "Authorization": f"Bearer {illia_token}"
-        },
+        headers={"Authorization": f"Bearer {illia_token}"},
     )
 
     assert illia_entry.status_code == 201
@@ -105,18 +104,14 @@ def test_list_entries_only_returns_own_entries(client):
             "category": "literature",
             "note": "Andreas Entry",
         },
-        headers={
-            "Authorization": f"Bearer {andreas_token}"
-        },
+        headers={"Authorization": f"Bearer {andreas_token}"},
     )
 
     assert andreas_entry.status_code == 201
 
     response = client.get(
         "/entries",
-        headers={
-            "Authorization": f"Bearer {illia_token}"
-        },
+        headers={"Authorization": f"Bearer {illia_token}"},
     )
 
     assert response.status_code == 200
@@ -126,6 +121,7 @@ def test_list_entries_only_returns_own_entries(client):
     assert len(entries) == 1
     assert entries[0]["amount"] == 1999
     assert entries[0]["note"] == "Illias Entry"
+
 
 def test_get_own_entry(client: TestClient):
     access_token = create_user_and_login(
@@ -141,9 +137,7 @@ def test_get_own_entry(client: TestClient):
             "amount": 1999,
             "category": "work_equipment",
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert create_response.status_code == 201
@@ -152,14 +146,13 @@ def test_get_own_entry(client: TestClient):
 
     response = client.get(
         f"/entries/{entry_id}",
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 200
     assert response.json()["id"] == entry_id
     assert response.json()["amount"] == 1999
+
 
 def test_get_other_users_entry_returns_404(client: TestClient):
     illia_token = create_user_and_login(
@@ -181,9 +174,7 @@ def test_get_other_users_entry_returns_404(client: TestClient):
             "amount": 1999,
             "category": "work_equipment",
         },
-        headers={
-            "Authorization": f"Bearer {illia_token}"
-        },
+        headers={"Authorization": f"Bearer {illia_token}"},
     )
 
     assert create_response.status_code == 201
@@ -192,15 +183,12 @@ def test_get_other_users_entry_returns_404(client: TestClient):
 
     response = client.get(
         f"/entries/{entry_id}",
-        headers={
-            "Authorization": f"Bearer {andreas_token}"
-        },
+        headers={"Authorization": f"Bearer {andreas_token}"},
     )
 
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Entry not found"
-    }
+    assert response.json() == {"detail": "Entry not found"}
+
 
 def test_update_own_entry(client: TestClient):
     access_token = create_user_and_login(
@@ -217,9 +205,7 @@ def test_update_own_entry(client: TestClient):
             "category": "work_equipment",
             "note": "Alte Notiz",
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert create_response.status_code == 201
@@ -232,9 +218,7 @@ def test_update_own_entry(client: TestClient):
             "amount": 2499,
             "note": "Neue Notiz",
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 200
@@ -244,6 +228,7 @@ def test_update_own_entry(client: TestClient):
     assert data["amount"] == 2499
     assert data["note"] == "Neue Notiz"
     assert data["category"] == "work_equipment"
+
 
 def test_update_other_users_entry_returns_404(client: TestClient):
     illia_token = create_user_and_login(
@@ -265,9 +250,7 @@ def test_update_other_users_entry_returns_404(client: TestClient):
             "amount": 1999,
             "category": "work_equipment",
         },
-        headers={
-            "Authorization": f"Bearer {illia_token}"
-        },
+        headers={"Authorization": f"Bearer {illia_token}"},
     )
 
     assert create_response.status_code == 201
@@ -279,15 +262,12 @@ def test_update_other_users_entry_returns_404(client: TestClient):
         json={
             "amount": 999999,
         },
-        headers={
-            "Authorization": f"Bearer {andreas_token}"
-        },
+        headers={"Authorization": f"Bearer {andreas_token}"},
     )
 
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Entry not found"
-    }
+    assert response.json() == {"detail": "Entry not found"}
+
 
 def test_delete_own_entry(client: TestClient):
     access_token = create_user_and_login(
@@ -303,9 +283,7 @@ def test_delete_own_entry(client: TestClient):
             "amount": 1999,
             "category": "work_equipment",
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert create_response.status_code == 201
@@ -314,21 +292,18 @@ def test_delete_own_entry(client: TestClient):
 
     delete_response = client.delete(
         f"/entries/{entry_id}",
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert delete_response.status_code == 204
 
     get_response = client.get(
         f"/entries/{entry_id}",
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert get_response.status_code == 404
+
 
 def test_delete_other_users_entry_returns_404(client: TestClient):
     illia_token = create_user_and_login(
@@ -350,9 +325,7 @@ def test_delete_other_users_entry_returns_404(client: TestClient):
             "amount": 1999,
             "category": "work_equipment",
         },
-        headers={
-            "Authorization": f"Bearer {illia_token}"
-        },
+        headers={"Authorization": f"Bearer {illia_token}"},
     )
 
     assert create_response.status_code == 201
@@ -361,21 +334,18 @@ def test_delete_other_users_entry_returns_404(client: TestClient):
 
     delete_response = client.delete(
         f"/entries/{entry_id}",
-        headers={
-            "Authorization": f"Bearer {andreas_token}"
-        },
+        headers={"Authorization": f"Bearer {andreas_token}"},
     )
 
     assert delete_response.status_code == 404
 
     get_response = client.get(
         f"/entries/{entry_id}",
-        headers={
-            "Authorization": f"Bearer {illia_token}"
-        },
+        headers={"Authorization": f"Bearer {illia_token}"},
     )
 
     assert get_response.status_code == 200
+
 
 @pytest.mark.parametrize(
     "field",
@@ -398,9 +368,7 @@ def test_update_entry_rejects_null_required_fields(
             "amount": 1999,
             "category": "work_equipment",
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert create_response.status_code == 201
@@ -412,12 +380,11 @@ def test_update_entry_rejects_null_required_fields(
         json={
             field: None,
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 422
+
 
 @pytest.mark.parametrize(
     "field",
@@ -443,9 +410,7 @@ def test_update_entry_allows_null_optional_fields(
             "distance_km": 20,
             "days": 2,
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert create_response.status_code == 201
@@ -457,9 +422,7 @@ def test_update_entry_allows_null_optional_fields(
         json={
             field: None,
         },
-        headers={
-            "Authorization": f"Bearer {access_token}"
-        },
+        headers={"Authorization": f"Bearer {access_token}"},
     )
 
     assert response.status_code == 200

@@ -18,6 +18,7 @@ def test_register_success(client):
     assert "password" not in data
     assert "password_hash" not in data
 
+
 def test_register_duplicate_email(client):
     user_data = {
         "name": "Illia",
@@ -30,9 +31,8 @@ def test_register_duplicate_email(client):
 
     assert first_response.status_code == 201
     assert second_response.status_code == 409
-    assert second_response.json() == {
-        "detail": "Email already registered"
-    }
+    assert second_response.json() == {"detail": "Email already registered"}
+
 
 def test_register_invalid_email(client):
     response = client.post(
@@ -46,6 +46,7 @@ def test_register_invalid_email(client):
 
     assert response.status_code == 422
 
+
 def test_register_password_too_short(client):
     response = client.post(
         "/register",
@@ -57,6 +58,7 @@ def test_register_password_too_short(client):
     )
 
     assert response.status_code == 422
+
 
 def test_register_normalizes_email(client):
     response = client.post(
@@ -70,6 +72,7 @@ def test_register_normalizes_email(client):
 
     assert response.status_code == 201
     assert response.json()["email"] == "illia@example.com"
+
 
 def test_register_rejects_duplicate_email_with_different_case(client):
     first_response = client.post(

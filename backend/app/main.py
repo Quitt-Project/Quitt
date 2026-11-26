@@ -21,4 +21,3 @@ app.include_router(entries_router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
