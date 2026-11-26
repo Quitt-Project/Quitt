@@ -215,8 +215,6 @@ If the native app turns out to be too much work, only the frontend changes.
 | Distribution | TestFlight / Expo Go | simply via link |
 | Backend | FastAPI + PostgreSQL | same |
 
-The accessibility requirements apply to the web app as well (labels, contrast, text size, tap targets).
-
 ## Open questions
 
 None at the moment.
