@@ -46,17 +46,27 @@ Scan the QR code with Expo Go. Phone and laptop need to be in the same Wi-Fi. Mo
 
 ## Environment variables
 
-`.env` contains the database settings (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`) and backend settings (`APP_NAME`, `APP_ENV`, `JWT_SECRET`, `JWT_ALGORITHM`, `JWT_EXPIRE_MINUTES`).
+`.env` contains the database settings (`POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`) and backend settings (`APP_NAME`, `APP_ENV`, `CORS_ORIGINS`, `JWT_SECRET`, `JWT_ALGORITHM`, `JWT_EXPIRE_MINUTES`).
+
+`CORS_ORIGINS` contains the comma-separated origins allowed to call the API from a browser. The default allows Expo web on `http://localhost:8081`.
 
 The defaults from `.env.example` are fine for development, except for `JWT_SECRET`. Replace `JWT_SECRET` with a random secret of at least 32 characters before starting the backend.
 
-You can generate a JWT secret with:
+You can generate a JWT secret with one of the following commands:
+
+macOS/Linux:
 
 ```bash
+openssl rand -base64 32
+```
+
+Windows:
+
+```powershell
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-The backend gets its `DATABASE_URL` from `docker-compose.yml`.
+The backend gets its `DATABASE_URL` and environment configuration from `docker-compose.yml`.
 
 ## Database migrations
 
