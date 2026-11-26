@@ -88,6 +88,10 @@ cd backend
 python -m ruff format .
 ```
 
+## Accessibility
+
+quitt is built to be accessible (decision no. 25). The requirements (contrast, screen reader labels, text size, tap targets) are in [docs/overview_en.md](docs/overview_en.md#accessibility). Every pull request with UI changes goes through the accessibility checklist in [docs/git-workflow.md](docs/git-workflow.md#accessibility-checklist).
+
 ## Working on the project
 
 Branches, commits and pull requests: see [docs/git-workflow.md](docs/git-workflow.md).
